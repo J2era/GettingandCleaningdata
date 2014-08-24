@@ -30,14 +30,17 @@ data$activity[data$activity==4]<-"sitting"
 data$activity[data$activity==5]<-"standing"
 data$activity[data$activity==6]<-"laying"
 
-##step4
+##step4 modify variable names
 tolower(names(data))
 names(data)<- gsub("-|\\()", "", names(data),)
 names(data) <- gsub("\\d", "", names(data),)
 
-## step5 subject and activity
+## step5  Calculate the average of each variable for each activity and each subject, and produces an independent tidy data set: data2, then export this tidy data as a txt file  
 data2 <- aggregate(data, by=list(subject=data$subject,activity=data$activity), FUN=mean)
 data2 <- data2[,-c(3,4)]
 data2$subject<-as.numeric(data2$subject)
+data2[complete.cases(data2),]
 mydata <- data2[order(data2$subject),]
+
 write.table(mydata, "./mydata.txt", sep="\t",row.name=FALSE)
+
